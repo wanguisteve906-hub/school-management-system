@@ -1,0 +1,26 @@
+from .auth import LoginRequest, TokenResponse
+from .budget import BudgetCreate, BudgetOut, BudgetUpdate
+from .grade import GradeCreate, GradeOut, GradeUpdate
+from .inventory import InventoryCreate, InventoryOut, InventoryUpdate
+from .staff import StaffCreate, StaffOut, StaffUpdate
+from .student import StudentCreate, StudentOut, StudentUpdate
+
+__all__ = [
+    "StudentCreate",
+    "StudentOut",
+    "StudentUpdate",
+    "StaffCreate",
+    "StaffOut",
+    "StaffUpdate",
+    "GradeCreate",
+    "GradeOut",
+    "GradeUpdate",
+    "BudgetCreate",
+    "BudgetOut",
+    "BudgetUpdate",
+    "InventoryCreate",
+    "InventoryOut",
+    "InventoryUpdate",
+    "LoginRequest",
+    "TokenResponse",
+]

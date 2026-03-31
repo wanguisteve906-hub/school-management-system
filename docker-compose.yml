@@ -1,0 +1,74 @@
+services:
+  db:
+    image: postgres:15
+    container_name: elimu_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - elimu_pg_data:/var/lib/postgresql/data
+    networks:
+      - elimu_net
+
+  redis:
+    image: redis:7
+    container_name: elimu_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - elimu_net
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: elimu_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - elimu_net
+
+  backend:
+    build:
+      context: ./backend
+    container_name: elimu_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - elimu_net
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: elimu_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - elimu_net
+
+volumes:
+  elimu_pg_data:
+
+networks:
+  elimu_net:
+    driver: bridge
