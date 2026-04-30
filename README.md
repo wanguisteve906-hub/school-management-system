@@ -84,3 +84,4 @@ docker-compose exec backend alembic upgrade head
   - Port: `5432`
   - Username: `POSTGRES_USER`
   - Password: `POSTGRES_PASSWORD`
+ uvicorn main:app --reload --host 0.0.0.0 --port 8000

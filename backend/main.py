@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse
 
 from database import Base, engine
 from models import budget, fees, grade, inventory, staff, student  # noqa: F401
-from routers import auth, budget as budget_router, fees as fees_router, grades, inventory as inventory_router, staff as staff_router, students
+from routers import analytics as analytics_router, auth, budget as budget_router, fees as fees_router, grades, inventory as inventory_router, staff as staff_router, students
 from security import DEV_JWT_SECRET_PLACEHOLDER
 
 logging.basicConfig(
@@ -103,6 +103,7 @@ app.include_router(auth.router)
 app.include_router(students.router, prefix="/api")
 app.include_router(staff_router.router, prefix="/api")
 app.include_router(grades.router, prefix="/api")
+app.include_router(analytics_router.router, prefix="/api")
 app.include_router(budget_router.router, prefix="/api")
 app.include_router(inventory_router.router, prefix="/api")
 app.include_router(fees_router.router, prefix="/api")

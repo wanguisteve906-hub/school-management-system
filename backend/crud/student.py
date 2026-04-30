@@ -4,12 +4,39 @@ from models.student import Student
 from schemas.student import StudentCreate, StudentUpdate
 
 
-def get_students(db: Session, skip: int = 0, limit: int = 100, query: str | None = None):
+def get_students(db: Session, skip: int = 0, limit: int = 100, query: str | None = None,
+                 form: int | None = None, stream: str | None = None,
+                 kcpe_min: int | None = None, kcpe_max: int | None = None):
     q = db.query(Student)
     if query:
         like = f"%{query}%"
         q = q.filter((Student.first_name.ilike(like)) | (Student.last_name.ilike(like)) | (Student.admission_no.ilike(like)))
+    if form is not None:
+        q = q.filter(Student.form == form)
+    if stream:
+        q = q.filter(Student.stream == stream)
+    if kcpe_min is not None:
+        q = q.filter(Student.kcpe_score >= kcpe_min)
+    if kcpe_max is not None:
+        q = q.filter(Student.kcpe_score <= kcpe_max)
     return q.offset(skip).limit(limit).all()
+
+
+def get_total_count(db: Session, query: str | None = None, form: int | None = None,
+                    stream: str | None = None, kcpe_min: int | None = None, kcpe_max: int | None = None):
+    q = db.query(Student)
+    if query:
+        like = f"%{query}%"
+        q = q.filter((Student.first_name.ilike(like)) | (Student.last_name.ilike(like)) | (Student.admission_no.ilike(like)))
+    if form is not None:
+        q = q.filter(Student.form == form)
+    if stream:
+        q = q.filter(Student.stream == stream)
+    if kcpe_min is not None:
+        q = q.filter(Student.kcpe_score >= kcpe_min)
+    if kcpe_max is not None:
+        q = q.filter(Student.kcpe_score <= kcpe_max)
+    return q.count()
 
 
 def get_student_by_id(db: Session, student_id: int):

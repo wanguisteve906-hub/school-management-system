@@ -7,6 +7,7 @@ import Staff from "./pages/Staff";
 import Grades from "./pages/Grades";
 import Budget from "./pages/Budget";
 import Inventory from "./pages/Inventory";
+import Performance from "./pages/Performance";
 import FeeStructures from "./pages/FeeStructures";
 import RecordPayment from "./pages/RecordPayment";
 import FeeBalances from "./pages/FeeBalances";
@@ -19,6 +20,7 @@ const navItems = [
   { path: "/grades", label: "Grades" },
   { path: "/budget", label: "Budget" },
   { path: "/inventory", label: "Inventory" },
+  { path: "/performance", label: "Performance" },
   { path: "/fees/structures", label: "Fee Structures" },
   { path: "/fees/payments", label: "Record Payment" },
   { path: "/fees/balances", label: "Fee Balances" }
@@ -207,9 +209,9 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900">
-      <div className="flex">
-        <aside className="w-64 min-h-screen bg-elimuGreen text-white p-4 flex flex-col">
+    <div className="h-screen bg-gray-100 text-gray-900 overflow-hidden">
+      <div className="flex h-full">
+        <aside className="w-64 h-screen bg-elimuGreen text-white p-4 flex flex-col shrink-0">
           <h1 className="text-2xl font-bold mb-8">Elimu HMS</h1>
           <nav className="space-y-2 flex-1">
             {navItems.map((item) => (
@@ -233,7 +235,7 @@ export default function App() {
           </button>
         </aside>
 
-        <main className="flex-1 p-6">
+        <main className="flex-1 h-screen overflow-y-auto p-6">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/students" element={<Students />} />
@@ -241,6 +243,7 @@ export default function App() {
             <Route path="/grades" element={<Grades />} />
             <Route path="/budget" element={<Budget />} />
             <Route path="/inventory" element={<Inventory />} />
+            <Route path="/performance" element={<Performance />} />
             <Route path="/fees/structures" element={<FeeStructures />} />
             <Route path="/fees/payments" element={<RecordPayment />} />
             <Route path="/fees/balances" element={<FeeBalances />} />

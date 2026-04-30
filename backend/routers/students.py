@@ -9,14 +9,20 @@ from schemas.student import StudentCreate, StudentOut, StudentUpdate
 router = APIRouter(prefix="/students", tags=["students"])
 
 
-@router.get("", response_model=list[StudentOut], dependencies=[Depends(get_current_user)])
+@router.get("", dependencies=[Depends(get_current_user)])
 def list_students(
     skip: int = 0,
-    limit: int = Query(default=100, le=500),
+    limit: int = Query(default=20, ge=1, le=100),
     q: str | None = None,
+    form: int | None = None,
+    stream: str | None = None,
+    kcpe_min: int | None = None,
+    kcpe_max: int | None = None,
     db: Session = Depends(get_db),
 ):
-    return student_crud.get_students(db, skip=skip, limit=limit, query=q)
+    students = student_crud.get_students(db, skip=skip, limit=limit, query=q, form=form, stream=stream, kcpe_min=kcpe_min, kcpe_max=kcpe_max)
+    total = student_crud.get_total_count(db, query=q, form=form, stream=stream, kcpe_min=kcpe_min, kcpe_max=kcpe_max)
+    return {"students": students, "total": total, "skip": skip, "limit": limit}
 
 
 @router.get("/{student_id}", response_model=StudentOut, dependencies=[Depends(get_current_user)])

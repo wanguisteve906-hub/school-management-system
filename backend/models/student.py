@@ -14,6 +14,7 @@ class Student(Base):
     gender = Column(String(10), nullable=False)
     form = Column(Integer, nullable=False)
     stream = Column(String(20), nullable=False)
+    kcpe_score = Column(Integer, nullable=True)
     guardian_name = Column(String(150), nullable=True)
     guardian_phone = Column(String(20), nullable=True)
     fee_balance = Column(Integer, default=0, nullable=False)
