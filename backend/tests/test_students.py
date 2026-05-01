@@ -4,7 +4,10 @@ import uuid
 def test_list_students_with_token(client, auth_headers):
     res = client.get("/api/students", headers=auth_headers)
     assert res.status_code == 200
-    assert isinstance(res.json(), list)
+    body = res.json()
+    assert isinstance(body, dict)
+    assert "students" in body
+    assert isinstance(body["students"], list)
 
 
 def test_create_student(client, auth_headers):
@@ -27,4 +30,4 @@ def test_create_student(client, auth_headers):
     assert body["id"] > 0
 
     listed = client.get("/api/students", headers=auth_headers).json()
-    assert any(s["admission_no"] == payload["admission_no"] for s in listed)
+    assert any(s["admission_no"] == payload["admission_no"] for s in listed.get("students", []))
