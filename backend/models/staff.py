@@ -13,6 +13,8 @@ class Staff(Base):
     last_name = Column(String(100), nullable=False)
     role = Column(String(50), nullable=False)
     subject = Column(String(50), nullable=False)
+    assigned_form = Column(Integer, nullable=True)
+    assigned_stream = Column(String(20), nullable=True)
     phone = Column(String(20), nullable=True)
     email = Column(String(120), nullable=True)
     hashed_password = Column(String(255), nullable=False, default="$2b$12$dummy")

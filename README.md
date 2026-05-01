@@ -42,6 +42,24 @@ docker-compose exec backend python seed.py
 ```
 Staff accounts are created in the app via **Sign up** (`POST /auth/signup`).
 
+## Demo data for class teacher + bursar flows
+
+If you want ready-to-test records for the class teacher and bursar dashboards:
+
+```bash
+docker-compose exec backend python seed_demo.py
+```
+
+This adds (idempotently):
+
+- Class teacher account (`TSC1001`)
+- Bursar account (`TSC2001`)
+- Form 2 North students
+- Today attendance entries
+- Fee assignments + balances
+- Parent fee reminder sample
+- Pocket money sample transactions
+
 ## Auth
 - **Sign up:** `POST /auth/signup` — body: `first_name`, `last_name`, `tsc_number` (username). Password is always the TSC number (stored hashed). No email.
 - **Sign in:** `POST /auth/login` — body: `tsc_number`, `password` (must be your TSC number), `name` (must match your **first name** or **last name** on file).

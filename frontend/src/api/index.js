@@ -27,3 +27,9 @@ export const analyticsApi = {
 };
 export const budgetApi = { list: () => api.get("/budget") };
 export const inventoryApi = { list: () => api.get("/inventory") };
+
+export const classTeacherApi = {
+  classStudents: () => api.get("/class-teacher/my-class/students"),
+  attendance: (targetDate) => api.get(`/class-teacher/my-class/attendance?target_date=${encodeURIComponent(targetDate)}`),
+  updateAttendance: (payload) => api.put("/class-teacher/my-class/attendance", payload),
+};

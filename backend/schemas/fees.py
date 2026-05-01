@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
@@ -82,3 +82,55 @@ class StudentBalanceOut(BaseModel):
 
 class DefaulterOut(StudentBalanceOut):
     pass
+
+
+class AttendanceMark(BaseModel):
+    student_id: int
+    status: Literal["present", "absent", "late"]
+
+
+class AttendanceBatchUpdate(BaseModel):
+    date: date
+    records: list[AttendanceMark]
+
+
+class AttendanceOut(BaseModel):
+    student_id: int
+    student_name: str
+    status: str
+
+
+class ParentMessageCreate(BaseModel):
+    message: str = Field(min_length=3, max_length=500)
+
+
+class ParentMessageOut(BaseModel):
+    id: int
+    student_id: int
+    student_name: str
+    guardian_phone: str | None
+    message: str
+    status: str
+    created_at: datetime
+
+
+class PocketMoneyCreate(BaseModel):
+    amount: int = Field(gt=0)
+    transaction_type: Literal["deposit", "withdrawal"]
+    note: str | None = Field(default=None, max_length=255)
+
+
+class PocketMoneyOut(BaseModel):
+    id: int
+    student_id: int
+    student_name: str
+    amount: int
+    transaction_type: str
+    note: str | None
+    created_at: datetime
+
+
+class PocketMoneyBalanceOut(BaseModel):
+    student_id: int
+    student_name: str
+    balance: int

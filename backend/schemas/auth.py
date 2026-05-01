@@ -18,6 +18,10 @@ class LoginRequest(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    user_id: int
+    role: str
+    assigned_form: int | None = None
+    assigned_stream: str | None = None
 
 
 class MessageResponse(BaseModel):

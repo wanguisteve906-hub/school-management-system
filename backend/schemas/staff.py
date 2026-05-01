@@ -7,6 +7,8 @@ class StaffBase(BaseModel):
     last_name: str
     role: str
     subject: str
+    assigned_form: int | None = None
+    assigned_stream: str | None = None
     phone: str | None = None
     email: str | None = None
 

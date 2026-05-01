@@ -11,9 +11,11 @@ import Performance from "./pages/Performance";
 import FeeStructures from "./pages/FeeStructures";
 import RecordPayment from "./pages/RecordPayment";
 import FeeBalances from "./pages/FeeBalances";
+import ClassTeacherDashboard from "./pages/ClassTeacherDashboard";
+import BursarDashboard from "./pages/BursarDashboard";
 import { authApi } from "./api/client";
 
-const navItems = [
+const adminNavItems = [
   { path: "/", label: "Dashboard" },
   { path: "/students", label: "Students" },
   { path: "/staff", label: "Staff" },
@@ -22,6 +24,14 @@ const navItems = [
   { path: "/inventory", label: "Inventory" },
   { path: "/performance", label: "Performance" },
   { path: "/fees/structures", label: "Fee Structures" },
+  { path: "/fees/payments", label: "Record Payment" },
+  { path: "/fees/balances", label: "Fee Balances" }
+];
+
+const classTeacherNavItems = [{ path: "/class-teacher", label: "My Class" }];
+
+const bursarNavItems = [
+  { path: "/bursar", label: "Bursar Dashboard" },
   { path: "/fees/payments", label: "Record Payment" },
   { path: "/fees/balances", label: "Fee Balances" }
 ];
@@ -38,6 +48,7 @@ export default function App() {
   const [authOk, setAuthOk] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("elimu_token"));
+  const [role, setRole] = useState((localStorage.getItem("elimu_role") || "principal").toLowerCase());
 
   const parseApiError = (err) => {
     if (err.code === "ERR_NETWORK" || err.message === "Network Error") {
@@ -73,7 +84,11 @@ export default function App() {
     try {
       const res = await authApi.login(tscNumber.trim(), password, nameForLogin.trim());
       localStorage.setItem("elimu_token", res.data.access_token);
+      localStorage.setItem("elimu_role", (res.data.role || "principal").toLowerCase());
+      if (res.data.assigned_form) localStorage.setItem("elimu_assigned_form", String(res.data.assigned_form));
+      if (res.data.assigned_stream) localStorage.setItem("elimu_assigned_stream", String(res.data.assigned_stream));
       setToken(res.data.access_token);
+      setRole((res.data.role || "principal").toLowerCase());
     } catch (err) {
       if (err.response?.status === 401) {
         setAuthError(parseApiError(err));
@@ -87,8 +102,14 @@ export default function App() {
 
   const logout = () => {
     localStorage.removeItem("elimu_token");
+    localStorage.removeItem("elimu_role");
+    localStorage.removeItem("elimu_assigned_form");
+    localStorage.removeItem("elimu_assigned_stream");
     setToken(null);
+    setRole("principal");
   };
+
+  const navItems = role === "class_teacher" ? classTeacherNavItems : role === "bursar" ? bursarNavItems : adminNavItems;
 
   if (!token) {
     return (
@@ -237,7 +258,9 @@ export default function App() {
 
         <main className="flex-1 h-screen overflow-y-auto p-6">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={role === "class_teacher" ? <ClassTeacherDashboard /> : role === "bursar" ? <BursarDashboard /> : <Dashboard />} />
+            <Route path="/class-teacher" element={<ClassTeacherDashboard />} />
+            <Route path="/bursar" element={<BursarDashboard />} />
             <Route path="/students" element={<Students />} />
             <Route path="/staff" element={<Staff />} />
             <Route path="/grades" element={<Grades />} />

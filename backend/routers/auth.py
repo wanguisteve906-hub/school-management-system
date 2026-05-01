@@ -57,4 +57,10 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
             detail="Invalid TSC number, password, or name",
         )
     token = create_access_token({"sub": str(user.id), "staff_no": user.staff_no})
-    return TokenResponse(access_token=token)
+    return TokenResponse(
+        access_token=token,
+        user_id=user.id,
+        role=user.role,
+        assigned_form=user.assigned_form,
+        assigned_stream=user.assigned_stream,
+    )

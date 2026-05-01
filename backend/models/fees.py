@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import Column, Date, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -51,3 +51,45 @@ class Payment(Base):
 
     student_fee = relationship("StudentFee", back_populates="payments")
     student = relationship("Student", back_populates="payments")
+
+
+class AttendanceRecord(Base):
+    __tablename__ = "attendance_records"
+
+    id = Column(Integer, primary_key=True, index=True)
+    student_id = Column(Integer, ForeignKey("students.id"), nullable=False, index=True)
+    date = Column(Date, nullable=False, index=True)
+    status = Column(String(20), nullable=False, default="present")
+    marked_by = Column(Integer, ForeignKey("staff.id"), nullable=False, index=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+
+    student = relationship("Student")
+
+
+class ParentFeeMessage(Base):
+    __tablename__ = "parent_fee_messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    student_id = Column(Integer, ForeignKey("students.id"), nullable=False, index=True)
+    sent_by = Column(Integer, ForeignKey("staff.id"), nullable=False, index=True)
+    guardian_phone = Column(String(20), nullable=True)
+    message = Column(String(500), nullable=False)
+    status = Column(String(20), nullable=False, default="queued")
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    student = relationship("Student")
+
+
+class PocketMoneyTransaction(Base):
+    __tablename__ = "pocket_money_transactions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    student_id = Column(Integer, ForeignKey("students.id"), nullable=False, index=True)
+    amount = Column(Integer, nullable=False)
+    transaction_type = Column(String(20), nullable=False)
+    note = Column(String(255), nullable=True)
+    recorded_by = Column(Integer, ForeignKey("staff.id"), nullable=False, index=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    student = relationship("Student")
