@@ -59,4 +59,4 @@ def test_login_wrong_name(client):
 
 def test_students_requires_auth(client):
     res = client.get("/api/students")
-    assert res.status_code == 403
+    assert res.status_code == 401
